@@ -12,9 +12,14 @@
         <div class="card-body">
 
             {{-- EXIBIÇÃO DA CAPA DO LIVRO --}}
-            @if ($book->cover_image)
+            @php
+                // Garante que a URL da imagem sempre esteja correta
+                $coverUrl = $book->cover_image ? asset('storage/' . $book->cover_image) : null;
+            @endphp
+
+            @if ($coverUrl)
                 <div class="mb-4 text-center">
-                    <img src="{{ asset('storage/' . $book->cover_image) }}"
+                    <img src="{{ $coverUrl }}"
                          alt="Capa do livro"
                          style="max-width: 220px; height: auto; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
                 </div>

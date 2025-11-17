@@ -90,18 +90,29 @@ class BookController extends Controller
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        // Atualiza campos normais
+        $book->title = $request->title;
+        $book->publisher_id = $request->publisher_id;
+        $book->author_id = $request->author_id;
+        $book->category_id = $request->category_id;
+
+        // Atualiza a capa apenas se houver upload
         if ($request->hasFile('cover_image')) {
+            // Apaga antiga se existir
             if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
                 Storage::disk('public')->delete($book->cover_image);
             }
-            $path = $request->file('cover_image')->store('books', 'public');
-            $request->merge(['cover_image' => $path]);
+
+            // Salva nova
+            $book->cover_image = $request->file('cover_image')->store('books', 'public');
         }
 
-        $book->update($request->all());
+        $book->save();
 
-        return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso.');
+        return redirect()->route('books.show', $book)
+                        ->with('success', 'Livro atualizado com sucesso.');
     }
+
 
 
         public function index()
