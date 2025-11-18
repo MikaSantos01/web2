@@ -19,21 +19,29 @@ class BookController extends Controller
         return view('books.create-id');
     }
 
-    // Salvar livro com input de ID
-    public function storeWithId(Request $request)
+        public function storeWithId(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
-
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        Book::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('cover_image')) {
+            $data['cover_image'] = $request->file('cover_image')->store('books', 'public');
+        } else {
+            $data['cover_image'] = null;
+        }
+
+        Book::create($data);
 
         return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
     }
+
 
     // Formulário com input select
     public function createWithSelect()
