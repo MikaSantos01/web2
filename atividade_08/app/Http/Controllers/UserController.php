@@ -43,24 +43,26 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+        public function edit(User $user)
     {
+        $this->authorize('update', $user); // Garante que só quem pode editar tenha acesso
         return view('users.edit', compact('user'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+        public function update(Request $request, User $user)
     {
+        $this->authorize('update', $user); // Garante que só quem pode editar tenha acesso
+
         // Validação básica
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            // Não validamos role aqui, pois só admin pode alterar
         ]);
 
-        // Atualiza dados comuns
         $user->name = $request->name;
         $user->email = $request->email;
 
