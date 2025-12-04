@@ -11,6 +11,10 @@ class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
         Book::class => BookPolicy::class,
+        Author::class => AuthorPolicy::class,
+        Category::class => CategoryPolicy::class,
+        Publisher::class => PublisherPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     public function boot(): void
